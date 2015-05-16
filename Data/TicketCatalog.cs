@@ -19,66 +19,10 @@ namespace TravelAgency.Data
         {
 
         }
-
-        public int GetTicketsCount(string type)
+        
+        public string AddAirTicket(string flightNumber, string from, string to, string airline, DateTime dateTime, decimal price)
         {
-            if (type == "air")
-            {
-                return this.airTicketsCount;
-            }
-
-            if (type == "bus")
-            {
-                return this.busTicketsCount;
-            }
-
-            return this.trainTicketsCount;
-        }
-
-        public string AddTicket(Ticket ticket)
-        {
-            var key = ticket.UniqueKey;
-
-            if (this.Dict.ContainsKey(key))
-            {
-                return Constants.DuplicateTicket;
-            }
-
-            this.Dict.Add(key, ticket);
-            string fromToKey = ticket.FromToKey;
-            this.Dict2.Add(fromToKey, ticket);
-            this.Dict3.Add(ticket.DateAndTime, ticket);
-            return Constants.TicketAdded;
-        }
-
-        public string DeleteTicket(Ticket ticket)
-        {
-            var key = ticket.UniqueKey;
-
-            if (!this.Dict.ContainsKey(key))
-            {
-                return Constants.TicketNotExists;
-            }
-
-            ticket = this.Dict[key];
-            this.Dict.Remove(key);
-            string fromToKey = ticket.FromToKey;
-            this.Dict2.Remove(fromToKey, ticket);
-            this.Dict3.Remove(ticket.DateAndTime, ticket);
-            return Constants.TicketDeleted;
-        }
-
-        public string AddAirTicket(string flightNumber, string from, string to, string airline, string departureDateTime, string price)
-        {
-            AirTicket ticket = new AirTicket(flightNumber, from, to, airline, departureDateTime, price);
-
-            string result = this.AddTicket(ticket);
-
-            if (result.Contains("added"))
-            {
-                this.airTicketsCount++;
-            }
-
+            var result = this.AddAirTicket(flightNumber, from, to, airline, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString());
             return result;
         }
 
@@ -95,6 +39,118 @@ namespace TravelAgency.Data
 
             return result;
         }
+
+        public string AddTrainTicket(string from, string to, DateTime dateTime, decimal price, decimal studentPrice)
+        {
+            var result = this.AddTrainTicket(from, to, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString(), studentPrice.ToString());
+            return result;
+        }
+
+        public string DeleteTrainTicket(string from, string to, DateTime dateTime)
+        {
+            var result = this.DeleteTrainTicket(from, to, dateTime.ToString("dd.MM.yyyy HH:mm"));
+            return result;
+        }
+
+        public string AddBusTicket(string from, string to, string travelCompany, DateTime dateTime, decimal price)
+        {
+            var result = this.AddBussTicket(from, to, travelCompany, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString());
+            return result;
+        }
+
+        public string DeleteBusTicket(string from, string to, string travelCompany, DateTime dateTime)
+        {
+            var result = this.DeleteBusTicket(from, to, travelCompany, dateTime.ToString("dd.MM.yyyy HH:mm"));
+            return result;
+        }
+        
+        public string FindTicketsInInterval(DateTime startDateTime, DateTime endDateTime)
+        {
+            var ticketsFound = this.Dict3.Range(startDateTime, true, endDateTime, true).Values;
+            if (ticketsFound.Count > 0)
+            {
+                string ticketsAsString = ReadTickets(ticketsFound);
+                return ticketsAsString;
+            }
+
+            return Constants.NotFound;
+        }
+        
+        public string FindTicketsInInterval(string startDateTimeStr, string endDateTimeStr)
+        {
+            DateTime startDateTime = Ticket.ParseDateTime(startDateTimeStr);
+            DateTime endDateTime = Ticket.ParseDateTime(endDateTimeStr);
+            string ticketsAsString = this.FindTicketsInInterval(startDateTime, endDateTime);
+
+            return ticketsAsString;
+        }
+
+        public string FindTickets(string from, string to)
+        {
+            string fromToKey = Ticket.CreateFromToKey(from, to);
+            if (this.Dict2.ContainsKey(fromToKey))
+            {
+                List<Ticket> ticketsFound = new List<Ticket>();
+                foreach (var t in this.Dict2.Values)
+                {
+                    if (t.FromToKey == fromToKey)
+                    {
+                        ticketsFound.Add(t);
+                    }
+                }
+
+                string ticketsAsString = ReadTickets(ticketsFound);
+                return ticketsAsString;
+            }
+
+            return Constants.NotFound;
+        }
+        public int GetTicketsCount(TicketType ticketType)
+        {
+            if (ticketType == TicketType.Air)
+            {
+                return this.airTicketsCount;
+            }
+
+            if (ticketType == TicketType.Bus)
+            {
+                return this.busTicketsCount;
+            }
+
+            return this.trainTicketsCount;
+        }
+
+        public int GetTicketsCount(string type)
+        {
+            if (type == "air")
+            {
+                return this.airTicketsCount;
+            }
+
+            if (type == "bus")
+            {
+                return this.busTicketsCount;
+            }
+
+            return this.trainTicketsCount;
+        }
+
+
+        public string AddAirTicket(string flightNumber, string from, string to, string airline, string departureDateTime, string price)
+        {
+            AirTicket ticket = new AirTicket(flightNumber, from, to, airline, departureDateTime, price);
+
+            string result = this.AddTicket(ticket);
+
+            if (result.Contains("added"))
+            {
+                this.airTicketsCount++;
+            }
+
+            return result;
+        }
+
+
 
         public string AddTrainTicket(string from, string to, string departureDateTime, string price, string studentPrice)
         {
@@ -161,6 +217,22 @@ namespace TravelAgency.Data
             return result;
         }
 
+        private string AddTicket(Ticket ticket)
+        {
+            var key = ticket.UniqueKey;
+
+            if (this.Dict.ContainsKey(key))
+            {
+                return Constants.DuplicateTicket;
+            }
+
+            this.Dict.Add(key, ticket);
+            string fromToKey = ticket.FromToKey;
+            this.Dict2.Add(fromToKey, ticket);
+            this.Dict3.Add(ticket.DateAndTime, ticket);
+            return Constants.TicketAdded;
+        }
+
         private static string ReadTickets(ICollection<Ticket> tickets)
         {
             List<Ticket> sortedTickets = new List<Ticket>(tickets);
@@ -180,110 +252,23 @@ namespace TravelAgency.Data
             return result;
         }
 
-        public string FindTickets(string from, string to)
+        private string DeleteTicket(Ticket ticket)
         {
-            string fromToKey = Ticket.CreateFromToKey(from, to);
-            if (this.Dict2.ContainsKey(fromToKey))
-            {
-                List<Ticket> ticketsFound = new List<Ticket>();
-                foreach (var t in this.Dict2.Values)
-                {
-                    if (t.FromToKey == fromToKey)
-                    {
-                        ticketsFound.Add(t);
-                    }
-                }
+            var key = ticket.UniqueKey;
 
-                string ticketsAsString = ReadTickets(ticketsFound);
-                return ticketsAsString;
+            if (!this.Dict.ContainsKey(key))
+            {
+                return Constants.TicketNotExists;
             }
 
-            return Constants.NotFound;
+            ticket = this.Dict[key];
+            this.Dict.Remove(key);
+            string fromToKey = ticket.FromToKey;
+            this.Dict2.Remove(fromToKey, ticket);
+            this.Dict3.Remove(ticket.DateAndTime, ticket);
+            return Constants.TicketDeleted;
         }
 
-        public string FindTicketsInInterval(string startDateTimeStr, string endDateTimeStr)
-        {
-            DateTime startDateTime = Ticket.ParseDateTime(startDateTimeStr);
-            DateTime endDateTime = Ticket.ParseDateTime(endDateTimeStr);
-            string ticketsAsString = this.FindTicketsInInterval(startDateTime, endDateTime);
 
-            return ticketsAsString;
-        }
-
-        public string FindTicketsInInterval2(DateTime startDateTime, DateTime endDateTime)
-        {
-            var ticketsFound = this.Dict3.Range(startDateTime, true, endDateTime, true).Values;
-
-            if (ticketsFound.Count > 0)
-            {
-                string ticketsAsString = ReadTickets(ticketsFound);
-                return ticketsAsString;
-            }
-
-            return Constants.NotFound;
-        }
-
-        public string FindTicketsInInterval(DateTime startDateTime, DateTime endDateTime)
-        {
-            var ticketsFound = this.Dict3.Range(startDateTime, true, endDateTime, true).Values;
-            if (ticketsFound.Count > 0)
-            {
-                string ticketsAsString = ReadTickets(ticketsFound);
-                return ticketsAsString;
-            }
-
-            return Constants.NotFound;
-        }
-
-        public string AddAirTicket(string flightNumber, string from, string to, string airline, DateTime dateTime, decimal price)
-        {
-            var result = this.AddAirTicket(flightNumber, from, to, airline, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString());
-            return result;
-        }
-
-        string ITicketCatalog.DeleteAirTicket(string flightNumber)
-        {
-            var result = this.DeleteAirTicket(flightNumber);
-            return result;
-        }
-
-        public string AddTrainTicket(string from, string to, DateTime dateTime, decimal price, decimal studentPrice)
-        {
-            var result = this.AddTrainTicket(from, to, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString(), studentPrice.ToString());
-            return result;
-        }
-
-        public string DeleteTrainTicket(string from, string to, DateTime dateTime)
-        {
-            var result = this.DeleteTrainTicket(from, to, dateTime.ToString("dd.MM.yyyy HH:mm"));
-            return result;
-        }
-
-        public string AddBusTicket(string from, string to, string travelCompany, DateTime dateTime, decimal price)
-        {
-            var result = this.AddBussTicket(from, to, travelCompany, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString());
-            return result;
-        }
-
-        public string DeleteBusTicket(string from, string to, string travelCompany, DateTime dateTime)
-        {
-            var result = this.DeleteBusTicket(from, to, travelCompany, dateTime.ToString("dd.MM.yyyy HH:mm"));
-            return result;
-        }
-
-        public int GetTicketsCount(TicketType ticketType)
-        {
-            if (ticketType == TicketType.Air)
-            {
-                return this.airTicketsCount;
-            }
-
-            if (ticketType == TicketType.Bus)
-            {
-                return this.busTicketsCount;
-            }
-
-            return this.trainTicketsCount;
-        }
     }
 }
