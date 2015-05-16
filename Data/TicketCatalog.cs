@@ -36,7 +36,7 @@ namespace TravelAgency.Data
             }
 
             string command = line.Substring(0, firstSpaceIndex);
-            string output = "Invalid command!";
+            string output = Constants.InvalidCommand;
 
             switch (command)
             {
@@ -159,7 +159,7 @@ namespace TravelAgency.Data
                 string key = ticket.UniqueKey;
                 if (this.Dict.ContainsKey(key))
                 {
-                    return "Duplicate ticket";
+                    return Constants.DuplicateTicket;
                 }
                 else
                 {
@@ -168,7 +168,7 @@ namespace TravelAgency.Data
 
                     this.Dict2.Add(fromToKey, ticket);
                     this.Dict3.Add(ticket.DateAndTime, ticket);
-                    return "Ticket added";
+                    return Constants.TicketAdded;
                 }
             }
             else
@@ -182,10 +182,10 @@ namespace TravelAgency.Data
                     string fromToKey = ticket.FromToKey;
                     this.Dict2.Remove(fromToKey, ticket);
                     this.Dict3.Remove(ticket.DateAndTime, ticket);
-                    return "Ticket deleted";
+                    return Constants.TicketDeleted;
                 }
 
-                return "Ticket does not exist";
+                return Constants.TicketNotExists;
             }
         }
 
@@ -250,7 +250,7 @@ namespace TravelAgency.Data
 
             if (this.Dict.ContainsKey(key))
             {
-                result = "Duplicate ticket";
+                result = Constants.DuplicateTicket;
             }
             else
             {
@@ -258,7 +258,7 @@ namespace TravelAgency.Data
                 string fromToKey = ticket.FromToKey;
                 this.Dict2.Add(fromToKey, ticket);
                 this.Dict3.Add(ticket.DateAndTime, ticket);
-                result = "Ticket added";
+                result = Constants.TicketAdded;
             }
 
             if (result.Contains("added"))
@@ -319,7 +319,7 @@ namespace TravelAgency.Data
                 return ticketsAsString;
             }
 
-            return "Not found";
+            return Constants.NotFound;
         }
 
         public string FindTicketsInInterval(string startDateTimeStr, string endDateTimeStr)
@@ -341,7 +341,7 @@ namespace TravelAgency.Data
                 return ticketsAsString;
             }
 
-            return "Not found";
+            return Constants.NotFound;
         }
 
         public string FindTicketsInInterval(DateTime startDateTime, DateTime endDateTime)
@@ -353,7 +353,7 @@ namespace TravelAgency.Data
                 return ticketsAsString;
             }
 
-            return "Not found";
+            return Constants.NotFound;
         }
 
         public string AddAirTicket(string flightNumber, string from, string to, string airline, DateTime dateTime, decimal price)
