@@ -1,7 +1,6 @@
-using System;
-
 namespace TravelAgency.Data
 {
+    using System;
     class AirTicket : Ticket
     {
         public AirTicket(string flightNumber, string from, string to, string airline,

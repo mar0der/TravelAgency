@@ -1,8 +1,8 @@
-﻿using System;
-using TravelAgency.Data;
-
-namespace TravelAgency
+﻿namespace TravelAgency
 {
+    using System;
+    using Data;
+
     class TravelAgencyMain
     {
         static void Main()

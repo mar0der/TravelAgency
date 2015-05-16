@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using TravelAgency.Enumerations;
-using TravelAgency.Interfaces;
-using Wintellect.PowerCollections;
-
 namespace TravelAgency.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using TravelAgency.Enumerations;
+    using TravelAgency.Interfaces;
+    using Wintellect.PowerCollections;
+
     public class TicketCatalog : ITicketCatalog
     {
         internal Dictionary<string, Ticket> Dict = new Dictionary<string, Ticket>();

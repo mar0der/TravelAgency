@@ -1,7 +1,7 @@
 namespace TravelAgency.Interfaces
 {
     using System;
-    using TravelAgency.Enumerations;
+    using Enumerations;
 
     public interface ITicketCatalog
     {

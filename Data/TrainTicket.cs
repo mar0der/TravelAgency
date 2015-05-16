@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace TravelAgency.Data
+﻿namespace TravelAgency.Data
 {
+    using System;
+
     class TrainTicket : Ticket
     {
         public TrainTicket(string from, string to, string departureDateTime, string priceString, string studentPriceString)

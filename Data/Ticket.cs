@@ -1,8 +1,8 @@
-using System;
-using System.Globalization;
-
 namespace TravelAgency.Data
 {
+    using System;
+    using System.Globalization;
+
     internal abstract class Ticket : IComparable<Ticket>
     {
         public abstract string Type { get; }
