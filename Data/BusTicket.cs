@@ -1,12 +1,14 @@
 ﻿namespace TravelAgency.Data
 {
     using System;
-    class BusTicket : Ticket
+
+    public class BusTicket : Ticket
     {
         public BusTicket(string from, string to, string travelCompany, string departureDateTime, string priceString)
         {
             this.From = from;
-            this.To = to; this.Company = travelCompany;
+            this.To = to; 
+            this.Company = travelCompany;
             DateTime dateAndTime = ParseDateTime(departureDateTime);
 
             this.DateAndTime = dateAndTime;
@@ -17,7 +19,8 @@
         public BusTicket(string from, string to, string travelCompany, string departureDateTime)
         {
             this.From = from;
-            this.To = to; this.Company = travelCompany;
+            this.To = to; 
+            this.Company = travelCompany;
             DateTime dateAndTime = ParseDateTime(departureDateTime);
             this.DateAndTime = dateAndTime;
         }
@@ -29,6 +32,7 @@
                 return "bus";
             }
         }
+
         public override string UniqueKey
         {
             get

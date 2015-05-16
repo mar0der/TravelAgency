@@ -3,9 +3,9 @@
     using System;
     using Data;
 
-    class TravelAgencyMain
+    public class TravelAgencyMain
     {
-        static void Main()
+        public static void Main()
         {
             TicketCatalog ticketCatalog = new TicketCatalog();
             while (true)

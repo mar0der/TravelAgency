@@ -1,10 +1,10 @@
 namespace TravelAgency.Data
 {
     using System;
-    class AirTicket : Ticket
+
+    public class AirTicket : Ticket
     {
-        public AirTicket(string flightNumber, string from, string to, string airline,
-            string departureDateTime, string stringPrice)
+        public AirTicket(string flightNumber, string from, string to, string airline, string departureDateTime, string stringPrice)
         {
             this.FlightNumber = flightNumber;
             this.From = from;
@@ -30,6 +30,7 @@ namespace TravelAgency.Data
                 return "air";
             }
         }
+
         public override string UniqueKey
         {
             get

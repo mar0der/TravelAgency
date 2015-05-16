@@ -8,27 +8,30 @@ namespace TravelAgency.Data
 
     public class TicketCatalog : ITicketCatalog
     {
-        internal Dictionary<string, Ticket> Dict = new Dictionary<string, Ticket>();
-        MultiDictionary<string, Ticket> Dict2 = new MultiDictionary<string, Ticket>(true);
-        internal OrderedMultiDictionary<DateTime, Ticket> Dict3 = new OrderedMultiDictionary<DateTime, Ticket>(true);
-
         public int airTicketsCount = 0;
         public int busTicketsCount = 0;
         public int trainTicketsCount = 0;
+
+        private Dictionary<string, Ticket> Dict = new Dictionary<string, Ticket>();
+        private MultiDictionary<string, Ticket> Dict2 = new MultiDictionary<string, Ticket>(true);
+        private OrderedMultiDictionary<DateTime, Ticket> Dict3 = new OrderedMultiDictionary<DateTime, Ticket>(true);
+
         public int GetTicketsCount(string type)
         {
             if (type == "air")
             {
-                return airTicketsCount;
+                return this.airTicketsCount;
             }
+
             if (type == "bus")
             {
-                return busTicketsCount;
+                return this.busTicketsCount;
             }
-            return trainTicketsCount;
+
+            return this.trainTicketsCount;
         }
 
-        internal string AddDeleteTicket(Ticket ticket, bool isAdd)
+        public string AddDeleteTicket(Ticket ticket, bool isAdd)
         {
             if (isAdd)
             {
@@ -60,6 +63,7 @@ namespace TravelAgency.Data
                     this.Dict3.Remove(ticket.DateAndTime, ticket);
                     return "Ticket deleted";
                 }
+
                 return "Ticket does not exist";
             }
         }
@@ -68,11 +72,13 @@ namespace TravelAgency.Data
         {
             AirTicket ticket = new AirTicket(flightNumber, from, to, airline, departureDateTime, price);
 
-            string result = AddDeleteTicket(ticket, true);
+            string result = this.AddDeleteTicket(ticket, true);
+
             if (result.Contains("added"))
             {
-                airTicketsCount++;
+                this.airTicketsCount++;
             }
+
             return result;
         }
 
@@ -80,12 +86,13 @@ namespace TravelAgency.Data
         {
             AirTicket ticket = new AirTicket(flightNumber);
 
-            string result = AddDeleteTicket(ticket, false);
+            string result = this.AddDeleteTicket(ticket, false);
 
             if (result.Contains("deleted"))
             {
-                airTicketsCount--;
+                this.airTicketsCount--;
             }
+
             return result;
         }
 
@@ -95,20 +102,22 @@ namespace TravelAgency.Data
             string result = this.AddDeleteTicket(ticket, true);
             if (result.Contains("added"))
             {
-                trainTicketsCount++;
+                this.trainTicketsCount++;
             }
+
             return result;
         }
 
-        string DeleteTrainTicket(string from, string to, string departureDateTime)
+        public string DeleteTrainTicket(string from, string to, string departureDateTime)
         {
             TrainTicket ticket = new TrainTicket(from, to, departureDateTime);
-            string result = AddDeleteTicket(ticket, false);
+            string result = this.AddDeleteTicket(ticket, false);
 
             if (result.Contains("deleted"))
             {
-                trainTicketsCount--;
+                this.trainTicketsCount--;
             }
+
             return result;
         }
 
@@ -133,28 +142,30 @@ namespace TravelAgency.Data
 
             if (result.Contains("added"))
             {
-                busTicketsCount++;
+                this.busTicketsCount++;
             }
+
             return result;
         }
 
         private string DeleteBusTicket(string from, string to, string travelCompany, string departureDateTime)
         {
             BusTicket ticket = new BusTicket(from, to, travelCompany, departureDateTime);
-            string result = AddDeleteTicket(ticket, false);
+            string result = this.AddDeleteTicket(ticket, false);
 
             if (result.Contains("deleted"))
             {
-                busTicketsCount--;
+                this.busTicketsCount--;
             }
+
             return result;
         }
 
-        internal static string ReadTickets(ICollection<Ticket> tickets)
+        private static string ReadTickets(ICollection<Ticket> tickets)
         {
             List<Ticket> sortedTickets = new List<Ticket>(tickets);
             sortedTickets.Sort();
-            string result = "";
+            string result = string.Empty;
 
             for (int i = 0; i < sortedTickets.Count; i++)
             {
@@ -165,8 +176,10 @@ namespace TravelAgency.Data
                     result += " ";
                 }
             }
+
             return result;
         }
+
         public string FindTickets(string from, string to)
         {
             string fromToKey = Ticket.CreateFromToKey(from, to);
@@ -180,8 +193,8 @@ namespace TravelAgency.Data
                         ticketsFound.Add(t);
                     }
                 }
-                string ticketsAsString = ReadTickets(ticketsFound);
 
+                string ticketsAsString = ReadTickets(ticketsFound);
                 return ticketsAsString;
             }
 
@@ -192,7 +205,7 @@ namespace TravelAgency.Data
         {
             DateTime startDateTime = Ticket.ParseDateTime(startDateTimeStr);
             DateTime endDateTime = Ticket.ParseDateTime(endDateTimeStr);
-            string ticketsAsString = FindTicketsInInterval(startDateTime, endDateTime);
+            string ticketsAsString = this.FindTicketsInInterval(startDateTime, endDateTime);
 
             return ticketsAsString;
         }
@@ -222,9 +235,9 @@ namespace TravelAgency.Data
             return "Not found";
         }
 
-        internal string ProcessCommand(string line)
+        public string ProcessCommand(string line)
         {
-            if (line == "")
+            if (line == string.Empty)
             {
                 return null;
             }
@@ -243,16 +256,17 @@ namespace TravelAgency.Data
             {
                 case "AddAir":
                     string allParameters = line.Substring(firstSpaceIndex + 1);
-                    string[] parameters = allParameters.Split(
-                        new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
                     for (int i = 0; i < parameters.Length; i++)
                     {
                         parameters[i] = parameters[i].Trim();
                     }
-                    output = AddAirTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]);
+
+                    output = this.AddAirTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]);
                     break;
                 case "DeleteAir":
-                    allParameters = line.Substring(firstSpaceIndex + 1); 
+                    allParameters = line.Substring(firstSpaceIndex + 1);
                     parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
                     for (int i = 0; i < parameters.Length; i++)
@@ -260,7 +274,7 @@ namespace TravelAgency.Data
                         parameters[i] = parameters[i].Trim();
                     }
 
-                    output = DeleteAirTicket(parameters[0]);
+                    output = this.DeleteAirTicket(parameters[0]);
                     break;
                 case "AddTrain":
                     allParameters = line.Substring(firstSpaceIndex + 1);
@@ -271,17 +285,19 @@ namespace TravelAgency.Data
                         parameters[i] = parameters[i].Trim();
                     }
 
-                    output = AddTrainTicket(parameters[0], parameters[1], parameters[2],
-                        parameters[3], parameters[4]);
+                    output = this.AddTrainTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
                     break;
 
                 case "DeleteTrain":
                     allParameters = line.Substring(firstSpaceIndex + 1);
                     parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
                     for (int i = 0; i < parameters.Length; i++)
                     {
                         parameters[i] = parameters[i].Trim();
-                    } output = DeleteTrainTicket(parameters[0], parameters[1], parameters[2]); 
+                    }
+
+                    output = this.DeleteTrainTicket(parameters[0], parameters[1], parameters[2]);
                     break;
 
                 case "AddBus": allParameters = line.Substring(firstSpaceIndex + 1);
@@ -291,11 +307,12 @@ namespace TravelAgency.Data
                     {
                         parameters[i] = parameters[i].Trim();
                     }
-                    output = AddBussTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
+
+                    output = this.AddBussTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
                     break;
 
                 case "DeleteBus":
-                    allParameters = line.Substring(firstSpaceIndex + 1); 
+                    allParameters = line.Substring(firstSpaceIndex + 1);
                     parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
                     for (int i = 0; i < parameters.Length; i++)
@@ -303,7 +320,7 @@ namespace TravelAgency.Data
                         parameters[i] = parameters[i].Trim();
                     }
 
-                    output = DeleteBusTicket(parameters[0], parameters[1], parameters[2], parameters[3]);
+                    output = this.DeleteBusTicket(parameters[0], parameters[1], parameters[2], parameters[3]);
                     break;
 
                 case "FindTickets":
@@ -315,7 +332,7 @@ namespace TravelAgency.Data
                         parameters[i] = parameters[i].Trim();
                     }
 
-                    output = FindTickets(parameters[0], parameters[1]);
+                    output = this.FindTickets(parameters[0], parameters[1]);
                     break;
 
                 case "FindTicketsInInterval":
@@ -327,62 +344,62 @@ namespace TravelAgency.Data
                         parameters[i] = parameters[i].Trim();
                     }
 
-                    output = findTicketsInInterval(parameters[0], parameters[1]);
+                    output = this.findTicketsInInterval(parameters[0], parameters[1]);
                     break;
             }
+
             return output;
         }
 
         public string AddAirTicket(string flightNumber, string from, string to, string airline, DateTime dateTime, decimal price)
         {
-            return AddAirTicket(flightNumber, from, to, airline,
-
-
-                dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString());
+            var result = this.AddAirTicket(flightNumber, from, to, airline, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString());
+            return result;
         }
 
         string ITicketCatalog.DeleteAirTicket(string flightNumber)
         {
-            return DeleteAirTicket(flightNumber);
+            var result = this.DeleteAirTicket(flightNumber);
+            return result;
         }
 
         public string AddTrainTicket(string from, string to, DateTime dateTime, decimal price, decimal studentPrice)
         {
-            var output = AddTrainTicket(from, to, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString(), studentPrice.ToString());
-            return output;
+            var result = this.AddTrainTicket(from, to, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString(), studentPrice.ToString());
+            return result;
         }
 
         public string DeleteTrainTicket(string from, string to, DateTime dateTime)
         {
-            var output =  DeleteTrainTicket(from, to, dateTime.ToString("dd.MM.yyyy HH:mm"));
-            return output;
+            var result = this.DeleteTrainTicket(from, to, dateTime.ToString("dd.MM.yyyy HH:mm"));
+            return result;
         }
 
-        public string AddBusTicket(string from, string to, string Sayahat_ki_Tanzeem, DateTime dateTime, decimal price)
+        public string AddBusTicket(string from, string to, string travelCompany, DateTime dateTime, decimal price)
         {
-            var output = AddBussTicket(from, to, Sayahat_ki_Tanzeem, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString());
-            return output;
+            var result = this.AddBussTicket(from, to, travelCompany, dateTime.ToString("dd.MM.yyyy HH:mm"), price.ToString());
+            return result;
         }
 
         public string DeleteBusTicket(string from, string to, string travelCompany, DateTime dateTime)
         {
-            var output = DeleteBusTicket(from, to, travelCompany, dateTime.ToString("dd.MM.yyyy HH:mm"));
-            return output;
+            var result = this.DeleteBusTicket(from, to, travelCompany, dateTime.ToString("dd.MM.yyyy HH:mm"));
+            return result;
         }
 
         public int GetTicketsCount(TicketType ticketType)
         {
             if (ticketType == TicketType.Air)
             {
-                return airTicketsCount;
+                return this.airTicketsCount;
             }
 
             if (ticketType == TicketType.Bus)
             {
-                return busTicketsCount;
+                return this.busTicketsCount;
             }
 
-            return trainTicketsCount;
+            return this.trainTicketsCount;
         }
     }
 }

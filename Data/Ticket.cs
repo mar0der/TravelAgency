@@ -3,7 +3,7 @@ namespace TravelAgency.Data
     using System;
     using System.Globalization;
 
-    internal abstract class Ticket : IComparable<Ticket>
+    public abstract class Ticket : IComparable<Ticket>
     {
         public abstract string Type { get; }
 
@@ -54,7 +54,8 @@ namespace TravelAgency.Data
             {
                 result = this.Type.CompareTo(otherTicket.Type);
             } 
-            //TODO see this logic
+
+            ////TODO see this logic
             if (result == 0)
             {
                 result = this.Price.CompareTo(otherTicket.Price);

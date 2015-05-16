@@ -2,13 +2,15 @@
 {
     using System;
 
-    class TrainTicket : Ticket
+    public class TrainTicket : Ticket
     {
         public TrainTicket(string from, string to, string departureDateTime, string priceString, string studentPriceString)
         {
-            this.From = from; this.To = to;
+            this.From = from; 
+            this.To = to;
             DateTime dateAndTime = ParseDateTime(departureDateTime);
-            this.DateAndTime = dateAndTime; decimal price = decimal.Parse(priceString);
+            this.DateAndTime = dateAndTime; 
+            decimal price = decimal.Parse(priceString);
             this.Price = price;
             decimal studentPrice = decimal.Parse(studentPriceString);
             this.StudentPrice = studentPrice;
@@ -17,7 +19,8 @@
         public TrainTicket(string from, string to, string departureDateTime)
         {
             this.From = from;
-            this.To = to; DateTime dateAndTime = ParseDateTime(departureDateTime);
+            this.To = to; 
+            DateTime dateAndTime = ParseDateTime(departureDateTime);
             this.DateAndTime = dateAndTime;
         }
 
