@@ -58,17 +58,22 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\AirTicket.cs" />
+    <Compile Include="Data\BusTicket.cs" />
+    <Compile Include="Interfaces\ITicketCatalog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Data\TicketCatalog.cs" />
+    <Compile Include="Data\Ticket.cs" />
+    <Compile Include="Enumerations\TicketType.cs" />
+    <Compile Include="Data\TrainTicket.cs" />
     <Compile Include="TravelAgency.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />
-    <Folder Include="Data\" />
-    <Folder Include="Enumerations\" />
-    <Folder Include="Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
