@@ -4,15 +4,13 @@ namespace TravelAgency.Data
 
     public class AirTicket : Ticket
     {
-        public AirTicket(string flightNumber, string from, string to, string airline, string departureDateTime, string stringPrice)
+        public AirTicket(string flightNumber, string from, string to, string airline, DateTime departureDateTime, decimal price)
         {
             this.FlightNumber = flightNumber;
             this.From = from;
             this.To = from;
             this.Company = airline;
-            DateTime dateAndTime = ParseDateTime(departureDateTime);
-            this.DateAndTime = dateAndTime;
-            decimal price = decimal.Parse(stringPrice);
+            this.DateAndTime = departureDateTime;
             this.Price = price;
         }
 

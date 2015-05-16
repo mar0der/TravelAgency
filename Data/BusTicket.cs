@@ -4,25 +4,21 @@
 
     public class BusTicket : Ticket
     {
-        public BusTicket(string from, string to, string travelCompany, string departureDateTime, string priceString)
+        public BusTicket(string from, string to, string travelCompany, DateTime departureDateTime, decimal price)
         {
             this.From = from;
             this.To = to; 
             this.Company = travelCompany;
-            DateTime dateAndTime = ParseDateTime(departureDateTime);
-
-            this.DateAndTime = dateAndTime;
-            decimal price = decimal.Parse(priceString);
+            this.DateAndTime = departureDateTime;
             this.Price = price;
         }
 
-        public BusTicket(string from, string to, string travelCompany, string departureDateTime)
+        public BusTicket(string from, string to, string travelCompany, DateTime departureDateTime)
         {
             this.From = from;
             this.To = to; 
             this.Company = travelCompany;
-            DateTime dateAndTime = ParseDateTime(departureDateTime);
-            this.DateAndTime = dateAndTime;
+            this.DateAndTime = departureDateTime;
         }
 
         public override string Type

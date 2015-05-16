@@ -4,24 +4,20 @@
 
     public class TrainTicket : Ticket
     {
-        public TrainTicket(string from, string to, string departureDateTime, string priceString, string studentPriceString)
+        public TrainTicket(string from, string to, DateTime departureDateTime, decimal price, decimal studentPrice)
         {
             this.From = from; 
             this.To = to;
-            DateTime dateAndTime = ParseDateTime(departureDateTime);
-            this.DateAndTime = dateAndTime; 
-            decimal price = decimal.Parse(priceString);
+            this.DateAndTime = departureDateTime; 
             this.Price = price;
-            decimal studentPrice = decimal.Parse(studentPriceString);
             this.StudentPrice = studentPrice;
         }
 
-        public TrainTicket(string from, string to, string departureDateTime)
+        public TrainTicket(string from, string to, DateTime departureDateTime)
         {
             this.From = from;
             this.To = to; 
-            DateTime dateAndTime = ParseDateTime(departureDateTime);
-            this.DateAndTime = dateAndTime;
+            this.DateAndTime = departureDateTime;
         }
 
         public decimal StudentPrice { get; set; }

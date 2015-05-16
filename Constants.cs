@@ -8,5 +8,6 @@
         public const string TicketDeleted = "Ticket deleted";
         public const string TicketNotExists = "Ticket does not exist";
         public const string NotFound = "Not found";
+        public const string DateTimeFormat = "dd.MM.yyyy HH:mm";
     }
 }

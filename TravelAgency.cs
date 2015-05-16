@@ -1,4 +1,6 @@
-﻿namespace TravelAgency
+﻿using System.Globalization;
+
+namespace TravelAgency
 {
     using System;
     using Data;
@@ -51,30 +53,30 @@
             {
                 case "AddAir":
                     parameters = ParseParameters(line, firstSpaceIndex);
-                    output = ticketCatalog.AddAirTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]);
+                    output = ProcessAddAirCommand(parameters);
                     break;
                 case "DeleteAir":
                     parameters = ParseParameters(line, firstSpaceIndex);
-                    output = ticketCatalog.DeleteAirTicket(parameters[0]);
+                    output = ProcessDeleteAirCommand(parameters);
                     break;
                 case "AddTrain":
                     parameters = ParseParameters(line, firstSpaceIndex);
-                    output = ticketCatalog.AddTrainTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
+                    output = ProcessAddTrainCommand(parameters);
                     break;
 
                 case "DeleteTrain":
                     parameters = ParseParameters(line, firstSpaceIndex);
-                    output = ticketCatalog.DeleteTrainTicket(parameters[0], parameters[1], parameters[2]);
+                    output = ProcessDeleteTrainCommand(parameters);
                     break;
 
                 case "AddBus": 
                     parameters = ParseParameters(line, firstSpaceIndex);
-                    output = ticketCatalog.AddBussTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
+                    output = ProcessAddBusCommand(parameters);
                     break;
 
                 case "DeleteBus":
                     parameters = ParseParameters(line, firstSpaceIndex);
-                    output = ticketCatalog.DeleteBusTicket(parameters[0], parameters[1], parameters[2], parameters[3]);
+                    output = ProcessDeleteBusCommand(parameters);
                     break;
 
                 case "FindTickets":
@@ -91,6 +93,66 @@
             return output;
         }
 
+        private static string ProcessAddAirCommand(string[] parameters)
+        {
+            var flightNumber = parameters[0];
+            var from = parameters[1];
+            var to = parameters[2];
+            var airline = parameters[3];
+            var dateTime = ParseDateTime(parameters[4]);
+            var price = decimal.Parse(parameters[5]);
+            var result = ticketCatalog.AddAirTicket(flightNumber, from, to, airline, dateTime, price);
+            return result;
+        }
+
+        private static string ProcessDeleteAirCommand(string[] parameters)
+        {
+            var flightNumber = parameters[0];
+            var result = ticketCatalog.DeleteAirTicket(flightNumber);
+            return result;
+        }
+
+        private static string ProcessAddTrainCommand(string[] parameters)
+        {
+            var from = parameters[0];
+            var to = parameters[1];
+            var departureDateTime = ParseDateTime(parameters[2]);
+            var price = decimal.Parse(parameters[3]);
+            decimal studentPrice = decimal.Parse(parameters[4]);
+            var result = ticketCatalog.AddTrainTicket(from, to, departureDateTime, price, studentPrice);
+            return result;
+        }
+
+        private static string ProcessDeleteTrainCommand(string[] parameters)
+        {
+            var from = parameters[0];
+            var to = parameters[1];
+            var departureDateTime = ParseDateTime(parameters[2]);
+            var result = ticketCatalog.DeleteTrainTicket(from, to, departureDateTime);
+            return result;
+        }
+        
+        private static string ProcessAddBusCommand(string[] parameters)
+        {
+            var from = parameters[0];
+            var to = parameters[1];
+            var travelCompany = parameters[2];
+            var departureDateTime = ParseDateTime(parameters[3]);
+            var price = decimal.Parse(parameters[4]);
+            var result = ticketCatalog.AddBusTicket(from, to, travelCompany, departureDateTime, price);
+            return result;
+        }
+
+        private static string ProcessDeleteBusCommand(string[] parameters)
+        {
+            var from = parameters[0];
+            var to = parameters[1];
+            var travelCompany = parameters[2];
+            var departureDateTime = ParseDateTime(parameters[3]);
+            var result = ticketCatalog.DeleteBusTicket(from, to, travelCompany, departureDateTime);
+            return result;
+        }
+
         private static string[] ParseParameters(string line, int firstSpaceIndex)
         {
             var allParameters = line.Substring(firstSpaceIndex + 1);
@@ -101,6 +163,13 @@
                 parameters[i] = parameters[i].Trim();
             }
             return parameters;
+        }
+
+        private static DateTime ParseDateTime(string dateTimeStr)
+        {
+            var result = DateTime.ParseExact(
+                dateTimeStr, Constants.DateTimeFormat, CultureInfo.InvariantCulture);
+            return result;
         }
     }
 }
