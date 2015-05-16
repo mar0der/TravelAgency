@@ -10,15 +10,15 @@
             TicketCatalog ticketCatalog = new TicketCatalog();
             while (true)
             {
-                string line = Console.ReadLine();
+                var commandString = Console.ReadLine();
 
-                if (line == null)
+                if (commandString == null)
                 {
                     break;
                 }
 
-                line = line.Trim();
-                string commandResult = ticketCatalog.ProcessCommand(line);
+                commandString = commandString.Trim();
+                var commandResult = ticketCatalog.ProcessCommand(commandString);
 
                 if (commandResult != null)
                 {

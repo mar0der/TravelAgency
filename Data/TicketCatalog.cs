@@ -2,19 +2,140 @@ namespace TravelAgency.Data
 {
     using System;
     using System.Collections.Generic;
-    using TravelAgency.Enumerations;
-    using TravelAgency.Interfaces;
+    using Enumerations;
+    using Interfaces;
     using Wintellect.PowerCollections;
 
     public class TicketCatalog : ITicketCatalog
     {
-        public int airTicketsCount = 0;
-        public int busTicketsCount = 0;
-        public int trainTicketsCount = 0;
+        private int airTicketsCount = 0;
+        private int busTicketsCount = 0;
+        private int trainTicketsCount = 0;
 
         private Dictionary<string, Ticket> Dict = new Dictionary<string, Ticket>();
         private MultiDictionary<string, Ticket> Dict2 = new MultiDictionary<string, Ticket>(true);
         private OrderedMultiDictionary<DateTime, Ticket> Dict3 = new OrderedMultiDictionary<DateTime, Ticket>(true);
+        
+        public TicketCatalog()
+        {
+            
+        }
+
+        public string ProcessCommand(string line)
+        {
+            if (line == string.Empty)
+            {
+                return null;
+            }
+
+            int firstSpaceIndex = line.IndexOf(' ');
+
+            if (firstSpaceIndex == -1)
+            {
+                return Constants.InvalidCommand;
+            }
+
+            string command = line.Substring(0, firstSpaceIndex);
+            string output = "Invalid command!";
+
+            switch (command)
+            {
+                case "AddAir":
+                    string allParameters = line.Substring(firstSpaceIndex + 1);
+                    string[] parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        parameters[i] = parameters[i].Trim();
+                    }
+
+                    output = this.AddAirTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]);
+                    break;
+                case "DeleteAir":
+                    allParameters = line.Substring(firstSpaceIndex + 1);
+                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        parameters[i] = parameters[i].Trim();
+                    }
+
+                    output = this.DeleteAirTicket(parameters[0]);
+                    break;
+                case "AddTrain":
+                    allParameters = line.Substring(firstSpaceIndex + 1);
+                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        parameters[i] = parameters[i].Trim();
+                    }
+
+                    output = this.AddTrainTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
+                    break;
+
+                case "DeleteTrain":
+                    allParameters = line.Substring(firstSpaceIndex + 1);
+                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        parameters[i] = parameters[i].Trim();
+                    }
+
+                    output = this.DeleteTrainTicket(parameters[0], parameters[1], parameters[2]);
+                    break;
+
+                case "AddBus": allParameters = line.Substring(firstSpaceIndex + 1);
+                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        parameters[i] = parameters[i].Trim();
+                    }
+
+                    output = this.AddBussTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
+                    break;
+
+                case "DeleteBus":
+                    allParameters = line.Substring(firstSpaceIndex + 1);
+                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        parameters[i] = parameters[i].Trim();
+                    }
+
+                    output = this.DeleteBusTicket(parameters[0], parameters[1], parameters[2], parameters[3]);
+                    break;
+
+                case "FindTickets":
+                    allParameters = line.Substring(firstSpaceIndex + 1);
+                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        parameters[i] = parameters[i].Trim();
+                    }
+
+                    output = this.FindTickets(parameters[0], parameters[1]);
+                    break;
+
+                case "FindTicketsInInterval":
+                    allParameters = line.Substring(firstSpaceIndex + 1);
+                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        parameters[i] = parameters[i].Trim();
+                    }
+
+                    output = this.FindTicketsInInterval(parameters[0], parameters[1]);
+                    break;
+            }
+
+            return output;
+        }
 
         public int GetTicketsCount(string type)
         {
@@ -201,7 +322,7 @@ namespace TravelAgency.Data
             return "Not found";
         }
 
-        public string findTicketsInInterval(string startDateTimeStr, string endDateTimeStr)
+        public string FindTicketsInInterval(string startDateTimeStr, string endDateTimeStr)
         {
             DateTime startDateTime = Ticket.ParseDateTime(startDateTimeStr);
             DateTime endDateTime = Ticket.ParseDateTime(endDateTimeStr);
@@ -233,122 +354,6 @@ namespace TravelAgency.Data
             }
 
             return "Not found";
-        }
-
-        public string ProcessCommand(string line)
-        {
-            if (line == string.Empty)
-            {
-                return null;
-            }
-
-            int firstSpaceIndex = line.IndexOf(' ');
-
-            if (firstSpaceIndex == -1)
-            {
-                return "Invalid command!";
-            }
-
-            string command = line.Substring(0, firstSpaceIndex);
-            string output = "Invalid command!";
-
-            switch (command)
-            {
-                case "AddAir":
-                    string allParameters = line.Substring(firstSpaceIndex + 1);
-                    string[] parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
-                    output = this.AddAirTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]);
-                    break;
-                case "DeleteAir":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
-                    output = this.DeleteAirTicket(parameters[0]);
-                    break;
-                case "AddTrain":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
-                    output = this.AddTrainTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
-                    break;
-
-                case "DeleteTrain":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
-                    output = this.DeleteTrainTicket(parameters[0], parameters[1], parameters[2]);
-                    break;
-
-                case "AddBus": allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
-                    output = this.AddBussTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
-                    break;
-
-                case "DeleteBus":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
-                    output = this.DeleteBusTicket(parameters[0], parameters[1], parameters[2], parameters[3]);
-                    break;
-
-                case "FindTickets":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
-                    output = this.FindTickets(parameters[0], parameters[1]);
-                    break;
-
-                case "FindTicketsInInterval":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
-                    output = this.findTicketsInInterval(parameters[0], parameters[1]);
-                    break;
-            }
-
-            return output;
         }
 
         public string AddAirTicket(string flightNumber, string from, string to, string airline, DateTime dateTime, decimal price)
