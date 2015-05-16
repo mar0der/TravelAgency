@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace TravelAgency.Data
 {
     using System;
@@ -122,29 +124,13 @@ namespace TravelAgency.Data
 
             return Constants.NotFound;
         }
-        
-        public string FindTicketsInInterval(string startDateTimeStr, string endDateTimeStr)
-        {
-            DateTime startDateTime = Ticket.ParseDateTime(startDateTimeStr);
-            DateTime endDateTime = Ticket.ParseDateTime(endDateTimeStr);
-            string ticketsAsString = this.FindTicketsInInterval(startDateTime, endDateTime);
-
-            return ticketsAsString;
-        }
 
         public string FindTickets(string from, string to)
         {
             string fromToKey = Ticket.CreateFromToKey(from, to);
             if (this.ticketsByFromToDestination.ContainsKey(fromToKey))
             {
-                List<Ticket> ticketsFound = new List<Ticket>();
-                foreach (var t in this.ticketsByFromToDestination.Values)
-                {
-                    if (t.FromToKey == fromToKey)
-                    {
-                        ticketsFound.Add(t);
-                    }
-                }
+                List<Ticket> ticketsFound = this.ticketsByFromToDestination.Values.Where(t => t.FromToKey == fromToKey).ToList();
 
                 string ticketsAsString = ReadTickets(ticketsFound);
                 return ticketsAsString;
@@ -152,6 +138,7 @@ namespace TravelAgency.Data
 
             return Constants.NotFound;
         }
+
         public int GetTicketsCount(TicketType ticketType)
         {
             if (ticketType == TicketType.Air)
@@ -181,7 +168,6 @@ namespace TravelAgency.Data
 
             return this.trainTicketsCount;
         }
-
 
         private string AddTicket(Ticket ticket)
         {
@@ -234,7 +220,5 @@ namespace TravelAgency.Data
             this.ticketsByDepartionDateTime.Remove(ticket.DateAndTime, ticket);
             return Constants.TicketDeleted;
         }
-
-
     }
 }

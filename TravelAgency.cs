@@ -69,7 +69,7 @@ namespace TravelAgency
                     output = ProcessDeleteTrainCommand(parameters);
                     break;
 
-                case "AddBus": 
+                case "AddBus":
                     parameters = ParseParameters(line, firstSpaceIndex);
                     output = ProcessAddBusCommand(parameters);
                     break;
@@ -81,12 +81,12 @@ namespace TravelAgency
 
                 case "FindTickets":
                     parameters = ParseParameters(line, firstSpaceIndex);
-                    output = ticketCatalog.FindTickets(parameters[0], parameters[1]);
+                    output = ProcessFindTickets(parameters);
                     break;
 
                 case "FindTicketsInInterval":
                     parameters = ParseParameters(line, firstSpaceIndex);
-                    output = ticketCatalog.FindTicketsInInterval(parameters[0], parameters[1]);
+                    output = ProcessFindTicketsInInterval(parameters);
                     break;
             }
 
@@ -131,7 +131,7 @@ namespace TravelAgency
             var result = ticketCatalog.DeleteTrainTicket(from, to, departureDateTime);
             return result;
         }
-        
+
         private static string ProcessAddBusCommand(string[] parameters)
         {
             var from = parameters[0];
@@ -153,10 +153,26 @@ namespace TravelAgency
             return result;
         }
 
+        private static string ProcessFindTickets(string[] parameters)
+        {
+            var from = parameters[0];
+            var to = parameters[1];
+            var result = ticketCatalog.FindTickets(from, to);
+            return result;
+        }
+
+        private static string ProcessFindTicketsInInterval(string[] parameters)
+        {
+            var fromDate = ParseDateTime(parameters[0]);
+            var toDate = ParseDateTime(parameters[1]);
+            var result = ticketCatalog.FindTicketsInInterval(fromDate, toDate);
+            return result;
+        }
+
         private static string[] ParseParameters(string line, int firstSpaceIndex)
         {
             var allParameters = line.Substring(firstSpaceIndex + 1);
-            var parameters = allParameters.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            var parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < parameters.Length; i++)
             {
