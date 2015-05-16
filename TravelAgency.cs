@@ -45,104 +45,62 @@
 
             string command = line.Substring(0, firstSpaceIndex);
             string output = Constants.InvalidCommand;
+            string[] parameters;
 
             switch (command)
             {
                 case "AddAir":
-                    string allParameters = line.Substring(firstSpaceIndex + 1);
-                    string[] parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
+                    parameters = ParseParameters(line, firstSpaceIndex);
                     output = ticketCatalog.AddAirTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]);
                     break;
                 case "DeleteAir":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
+                    parameters = ParseParameters(line, firstSpaceIndex);
                     output = ticketCatalog.DeleteAirTicket(parameters[0]);
                     break;
                 case "AddTrain":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
+                    parameters = ParseParameters(line, firstSpaceIndex);
                     output = ticketCatalog.AddTrainTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
                     break;
 
                 case "DeleteTrain":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
+                    parameters = ParseParameters(line, firstSpaceIndex);
                     output = ticketCatalog.DeleteTrainTicket(parameters[0], parameters[1], parameters[2]);
                     break;
 
-                case "AddBus": allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
+                case "AddBus": 
+                    parameters = ParseParameters(line, firstSpaceIndex);
                     output = ticketCatalog.AddBussTicket(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
                     break;
 
                 case "DeleteBus":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
+                    parameters = ParseParameters(line, firstSpaceIndex);
                     output = ticketCatalog.DeleteBusTicket(parameters[0], parameters[1], parameters[2], parameters[3]);
                     break;
 
                 case "FindTickets":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
+                    parameters = ParseParameters(line, firstSpaceIndex);
                     output = ticketCatalog.FindTickets(parameters[0], parameters[1]);
                     break;
 
                 case "FindTicketsInInterval":
-                    allParameters = line.Substring(firstSpaceIndex + 1);
-                    parameters = allParameters.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        parameters[i] = parameters[i].Trim();
-                    }
-
+                    parameters = ParseParameters(line, firstSpaceIndex);
                     output = ticketCatalog.FindTicketsInInterval(parameters[0], parameters[1]);
                     break;
             }
 
             return output;
+        }
+
+        private static string[] ParseParameters(string line, int firstSpaceIndex)
+        {
+            var allParameters = line.Substring(firstSpaceIndex + 1);
+            var parameters = allParameters.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                parameters[i] = parameters[i].Trim();
+            }
+            return parameters;
         }
     }
 }
